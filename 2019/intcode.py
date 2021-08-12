@@ -1,5 +1,5 @@
 class Computer:
-    def __init__(self, file):
+    def __init__(self, file="input.txt"):
         with open(file) as fin:
             self.file = list(map(int, fin.read().split(",")))
         self.FILE: list = self.file.copy()
