@@ -1,5 +1,5 @@
 from intcode import Computer
-from itertools import permutations
+from itertools import permutations, cycle
 
 
 def p1():
@@ -16,7 +16,25 @@ def p1():
 
 
 def p2():
-    pass
+    amps = [Computer("input.txt") for _ in range(5)]
+    m = 0
+    for phases in permutations(range(5, 10)):
+        prev = 0
+        c = 0
+        for phase, a in zip(phases, amps):
+            a.inp.append(phase)
+        for i, a in cycle(enumerate(amps)):
+            if i == 0:
+                c += 1
+            out = a.run([prev])
+            if len(out) < c:
+                break
+            prev = out[-1]
+        if prev > m:
+            m = prev
+        for a in amps:
+            a.reset()
+    return m
 
 
-print(p1())
+print(p2())

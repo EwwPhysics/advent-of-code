@@ -1,33 +1,40 @@
+from collections import deque
+
+
 class Computer:
     def __init__(self, file="input.txt"):
         with open(file) as fin:
             self.file = list(map(int, fin.read().split(",")))
         self.FILE: list = self.file.copy()
         self.NUMS = {1: 4, 2: 4, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4}
+        self.out = []
+        self.i = 0
+        self.inp = deque()
 
     def run(self, inp):
-        i = 0
-        out = []
-        inp = iter(inp)
-        while i < len(self.file):
-            op, modes = Computer.parse_token(self.file[i])
-            params = self.parameters(i, op, modes)
+        self.inp.extend(inp)
+        while self.i < len(self.file):
+            op, modes = Computer.parse_token(self.file[self.i])
+            params = self.parameters(self.i, op, modes)
             increase = True
             if op == 1:
                 self.file[params[2]] = self.file[params[0]] + self.file[params[1]]
             elif op == 2:
                 self.file[params[2]] = self.file[params[0]] * self.file[params[1]]
             elif op == 3:
-                self.file[params[0]] = next(inp)
+                self.file[params[0]] = self.inp.popleft()
             elif op == 4:
-                out.append(self.file[params[0]])
+                self.out.append(self.file[params[0]])
+                if increase:
+                    self.i += self.NUMS[op]
+                break
             elif op == 5:
                 if self.file[params[0]] != 0:
-                    i = self.file[params[1]]
+                    self.i = self.file[params[1]]
                     increase = False
             elif op == 6:
                 if self.file[params[0]] == 0:
-                    i = self.file[params[1]]
+                    self.i = self.file[params[1]]
                     increase = False
             elif op == 7:
                 if self.file[params[0]] < self.file[params[1]]:
@@ -44,8 +51,8 @@ class Computer:
             else:
                 raise Exception("hm")
             if increase:
-                i += self.NUMS[op]
-        return out
+                self.i += self.NUMS[op]
+        return self.out
 
     @staticmethod
     def parse_token(n):
@@ -66,7 +73,10 @@ class Computer:
             elif mode == 0:
                 params.append(self.file[p])
         return params
-        
+
     def reset(self):
         self.file = self.FILE.copy()
+        self.i = 0
+        self.out = []
+        self.inp = deque()
 
