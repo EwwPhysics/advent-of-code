@@ -1,15 +1,18 @@
-from collections import deque
+from collections import deque, defaultdict
 
 
 class Computer:
     def __init__(self, file="input.txt"):
         with open(file) as fin:
-            self.file = list(map(int, fin.read().split(",")))
-        self.FILE: list = self.file.copy()
-        self.NUMS = {1: 4, 2: 4, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4}
+            self.file = defaultdict(int)
+            for i, val in enumerate(map(int, fin.read().split(","))):
+                self.file[i] = val
+        self.FILE: defaultdict = self.file.copy()
+        self.NUMS = {1: 4, 2: 4, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 2}
         self.out = []
         self.i = 0
         self.inp = deque()
+        self.base = 0
 
     def run(self, inp):
         self.inp.extend(inp)
@@ -25,9 +28,6 @@ class Computer:
                 self.file[params[0]] = self.inp.popleft()
             elif op == 4:
                 self.out.append(self.file[params[0]])
-                if increase:
-                    self.i += self.NUMS[op]
-                break
             elif op == 5:
                 if self.file[params[0]] != 0:
                     self.i = self.file[params[1]]
@@ -46,6 +46,8 @@ class Computer:
                     self.file[params[2]] = 1
                 else:
                     self.file[params[2]] = 0
+            elif op == 9:
+                self.base += self.file[params[0]]
             elif op == 99:
                 break
             else:
@@ -72,6 +74,8 @@ class Computer:
                 params.append(p)
             elif mode == 0:
                 params.append(self.file[p])
+            elif mode == 2:
+                params.append(self.file[p] + self.base)
         return params
 
     def reset(self):
@@ -79,4 +83,5 @@ class Computer:
         self.i = 0
         self.out = []
         self.inp = deque()
+        self.base = 0
 
