@@ -13,9 +13,14 @@ class Computer:
         self.i = 0
         self.inp = deque()
         self.base = 0
+        self.finished = False
 
-    def run(self, inp):
-        self.inp.extend(inp)
+    def run(self, inp, m=float("inf")):
+        if isinstance(inp, int):
+            self.inp.append(inp)
+        else:
+            self.inp.extend(inp)
+
         while self.i < len(self.file):
             op, modes = Computer.parse_token(self.file[self.i])
             params = self.parameters(self.i, op, modes)
@@ -28,6 +33,9 @@ class Computer:
                 self.file[params[0]] = self.inp.popleft()
             elif op == 4:
                 self.out.append(self.file[params[0]])
+                if len(self.out) % m == 0:
+                    self.i += self.NUMS[op]
+                    break
             elif op == 5:
                 if self.file[params[0]] != 0:
                     self.i = self.file[params[1]]
@@ -48,12 +56,16 @@ class Computer:
                     self.file[params[2]] = 0
             elif op == 9:
                 self.base += self.file[params[0]]
+                
             elif op == 99:
+                self.finished = True
                 break
             else:
                 raise Exception("hm")
+
             if increase:
                 self.i += self.NUMS[op]
+
         return self.out
 
     @staticmethod
