@@ -15,11 +15,12 @@ class Computer:
         self.base = 0
         self.finished = False
 
-    def run(self, inp, m=float("inf")):
-        if isinstance(inp, int):
-            self.inp.append(inp)
-        else:
-            self.inp.extend(inp)
+    def run(self, inp=None, m=float("inf"), queue=True):
+        if inp is not None:
+            if isinstance(inp, int):
+                self.inp.append(inp)
+            else:
+                self.inp.extend(inp)
 
         while self.i < len(self.file):
             op, modes = Computer.parse_token(self.file[self.i])
@@ -30,7 +31,11 @@ class Computer:
             elif op == 2:
                 self.file[params[2]] = self.file[params[0]] * self.file[params[1]]
             elif op == 3:
-                self.file[params[0]] = self.inp.popleft()
+                if queue:
+                    val = self.inp.popleft()
+                else:
+                    val = self.inp.pop()
+                self.file[params[0]] = val
             elif op == 4:
                 self.out.append(self.file[params[0]])
                 if len(self.out) % m == 0:
