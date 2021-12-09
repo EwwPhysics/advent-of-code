@@ -18,7 +18,7 @@ def p1(file):
 
 def p2(file):
     f = d = aim = 0
-    
+
     for a, b in file:
         b = int(b)
 

@@ -2,7 +2,10 @@ from collections import Counter
 
 
 with open("input.txt") as fin:
-    data = [[x.split(), y.split()] for x, y in [x.split(" | ") for x in fin.read().splitlines()]]
+    data = [
+        [x.split(), y.split()]
+        for x, y in [x.split(" | ") for x in fin.read().splitlines()]
+    ]
 
 
 def p1():
@@ -58,7 +61,6 @@ def p2():
                 val = (set(pat) & dg).pop()
                 m[val] = "d"
                 m[(dg - {val}).pop()] = "g"
-
 
         d_rev = {v: str(k) for k, v in d.items()}
         num = ""
