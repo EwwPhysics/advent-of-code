@@ -29,7 +29,7 @@ def p2(points):
     y = max(points, key=lambda p: p[1])[1]
     grid = [[" " for _ in range(x + 1)] for _ in range(y + 1)]
     for a, b in points:
-        grid[b][a] = "#"
+        grid[b][a] = "■"
 
     return grid
 
